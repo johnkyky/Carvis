@@ -9,8 +9,8 @@
 #include "NeuralNetwork.hpp"
 
 
-#define FPS 60.f
-#define NBR_CAR 1
+#define FPS 121.f
+#define NBR_CAR 1000
 
 
 void neuro()
@@ -31,21 +31,32 @@ void mainThread()
     sf::RenderWindow window(sf::VideoMode().getDesktopMode(), "Carvis");
     window.setFramerateLimit(FPS);
 
-    sf::Texture carTexture;
-    carTexture.loadFromFile("./asset/audiLittle.png");
+    // Load font and fps label
+    sf::Font font;
+    if(!font.loadFromFile("./ressources/font.ttf"))
+        throw std::runtime_error("Failed to load font");
+    sf::Text fpsLabel("", font);
+    fpsLabel.setFillColor(sf::Color::Black);
 
-    Circuit circuit("./asset/circuit.map");
+    // Load Texture de la voiture
+    sf::Texture carTexture;
+    if(!carTexture.loadFromFile("./ressources/audiLittle.png"))
+        throw std::runtime_error("Failed to load car texture");
+
+    // Load circuit
+    Circuit circuit("./ressources/circuit.map");
     
     std::vector<Car> cars;
     for(unsigned int i = 0; i < NBR_CAR; i++)
         cars.emplace_back(circuit, carTexture);
+    Car* bestCar(nullptr);
     
     sf::Clock clock;
     sf::Event event;
     while(window.isOpen())
     {
         sf::Time dt = clock.restart();
-        //printf("%f\n", 1 / dt.asSeconds());
+        fpsLabel.setString(std::to_string((int)(1 / dt.asSeconds())));
         
         while(window.pollEvent(event))
         {
@@ -56,12 +67,27 @@ void mainThread()
                 for(Car& i : cars)
                     i.showRay();
 
+            if(event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Right))
+                if(bestCar)
+                {
+                    printf("on mute tt le monde\n");
+                    std::vector<Car> carsBuffer;
+                    for(unsigned int i = 0; i < NBR_CAR; i++)
+                    {
+                        Car carBuffer(*bestCar);
+                        carBuffer.mutate();
+                        carsBuffer.push_back(carBuffer);
+                    }
+                    cars.clear();
+                    cars = carsBuffer;
+                }
+
             if(event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 for(Car& i : cars)
                 {
                     if(i.getBox().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                     {
-                        printf("marque\n");
+                        bestCar = &i;
                         break;
                     }
                 }
@@ -76,10 +102,20 @@ void mainThread()
         for(Car& i : cars)
             window.draw(i);
 
+        window.draw(fpsLabel);
+
         window.display();
     }
 }
 
+void foo()
+{
+    Matrix m(10, 10);
+    m.print();
+    printf("\n");
+    m.mutate();
+    m.print();
+}
 
 int main()
 {
@@ -87,6 +123,7 @@ int main()
     
     //neuro();
     mainThread();
+    //foo();
 
     return 0;
 }

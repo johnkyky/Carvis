@@ -16,10 +16,11 @@ public:
 	const float& get(const int i, const int j) const;
 	void set(const int i, const int j, const float val);
 
-	void initValues(const float val);
 	void initRandom();
 
 	void print() const;
+	
+	void mutate();
 
 	friend void dot(Matrix& res, const Matrix& m1, const Matrix& m2);
 	friend Matrix dot(const Matrix& m1, const Matrix& m2);

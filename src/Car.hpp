@@ -15,8 +15,8 @@
 
 #define MAX_SPEED 600.f
 #define ACCELERATION 300.f
-#define DECELERATION 2
-#define	TURN 200
+#define DECELERATION 2.f
+#define	TURN 500.f
 #define NBR_RAYS 5
 
 
@@ -24,10 +24,10 @@ class Car : public sf::Drawable
 {
 public:
 	Car(const Circuit& circuit, const sf::Texture& texture);
-	Car(const Car& m);
+	Car(const Car& c);
 	~Car();
 
-	Car& operator=(const Car&) = delete;
+	Car& operator=(const Car& c);
 
 	void setPosition(const sf::Vector2f &position);
 	void setPosition(const float x, const float y);
@@ -43,12 +43,14 @@ public:
 	}
 
 	void showRay();
+	void mutate();
 
 	void update(const float fps);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
 	void input(const float fps);
+	void think(const float fps);
 	///Methode pour les neurones
 	void accelerate(const float fps);
 	void decelerate(const float fps);

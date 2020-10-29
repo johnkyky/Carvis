@@ -9,33 +9,27 @@
 class NeuralNetwork
 {
 public:
-	NeuralNetwork(const unsigned int inputSize, const unsigned int outputSize, 
-				  const unsigned int hiddenSize, const unsigned int hiddenNumberLayer);
+	NeuralNetwork(unsigned int inputSize, unsigned int outputSize, 
+				  unsigned int hiddenSize, unsigned int hiddenNumberLayer);
 	NeuralNetwork(const NeuralNetwork& n);
 	~NeuralNetwork();
 	
-	NeuralNetwork& operator=(const NeuralNetwork& n) = delete;
+	NeuralNetwork& operator=(const NeuralNetwork& n);
 
 	const Matrix forward(const Matrix& mat);
+	void mutate();
 
-	void print()
-	{
-		for(auto&i : m_matrix)
-		{
-			i.print();
-			printf("\n");
-		}
-	}
+	void print();
 
 private:
 	void sigmoid(Matrix& x);
 	void ReLu(Matrix& x);
 
 private:
-	const unsigned int m_inputSize;
-	const unsigned int m_outputSize;
-	const unsigned int m_hiddenSize;
-	const unsigned int m_hiddenNumberLayer;
+	unsigned int m_inputSize;
+	unsigned int m_outputSize;
+	unsigned int m_hiddenSize;
+	unsigned int m_hiddenNumberLayer;
 
 	std::vector<Matrix> m_matrix;
 };

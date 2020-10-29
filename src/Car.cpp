@@ -14,19 +14,17 @@ Car::Car(const Circuit& circuit, const sf::Texture& texture)
 	sf::Vector2f normalAngle(rotate(m_rotation, (float)-90));
 	for(int i = 0; i < NBR_RAYS; i++)
 		m_rays[i] = Ray(m_position, rotate(normalAngle, 45.f * (float)i));
-
-	//printf("const\n");
-	//m_neuralN.print();
 }
 
-Car::Car(const Car& m)
-	: m_circuit(m.m_circuit), m_vel(m.m_vel), m_texture(m.m_texture), m_sprite(m.m_texture),
-	  m_position(m.m_position), m_rotation(m.m_rotation), m_showLine(m.m_showLine),
-	  m_crashed(m.m_crashed), m_neuralN(m.m_neuralN)
+Car::Car(const Car& c)
+	: m_circuit(c.m_circuit), m_vel(0.f, 0.f), m_texture(c.m_texture), m_sprite(c.m_texture),
+	  m_showLine(c.m_showLine), m_crashed(false), m_neuralN(c.m_neuralN)
 {
+	m_position = m_circuit.getSpawnPoint();
+	m_rotation = m_circuit.getSpawnAngle();
 
 	for(unsigned int i = 0; i < NBR_RAYS; i++)
-		m_rays[i] = m.m_rays[i];
+		m_rays[i] = c.m_rays[i];
 
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 4, m_sprite.getGlobalBounds().height / 2);
 	m_sprite.setPosition(m_position);
@@ -35,6 +33,28 @@ Car::Car(const Car& m)
 Car::~Car()
 {
 	
+}
+
+Car& Car::operator=(const Car& c)
+{
+	m_vel = c.m_vel;
+	
+	m_sprite.setTexture(m_texture);
+	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 4, m_sprite.getGlobalBounds().height / 2);
+	m_sprite.setPosition(m_position);
+
+	m_position = c.m_position;
+	m_rotation = c.m_rotation;
+
+	for(unsigned int i = 0; i < NBR_RAYS; i++)
+		m_rays[i] = c.m_rays[i];
+
+	m_showLine = c.m_showLine;
+	m_crashed = c.m_showLine;
+
+	m_neuralN = m_neuralN;
+
+	return *this;
 }
 
 /*-----------------------------------------------------------------------------------------*/
@@ -86,17 +106,22 @@ void Car::showRay()
 	m_showLine = !m_showLine;
 }
 
+void Car::mutate()
+{
+	m_neuralN.mutate();
+}
+
 /*-----------------------------------------------------------------------------------------*/
 
 inline void Car::input(const float fps)
 {
-	//bool z = sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
-	//bool q = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
-	//bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+	const bool z = sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
+	const bool q = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+	const bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 
-	const bool z = rand() % 2;
-	const bool q = rand() % 2;
-	const bool d = rand() % 2;
+	//const bool z = rand() % 2;
+	//const bool q = rand() % 2;
+	//const bool d = rand() % 2;
 
 	if(z)
 		accelerate(fps);
@@ -109,34 +134,54 @@ inline void Car::input(const float fps)
 		right(fps);
 }
 
+inline void Car::think(const float fps)
+{
+	Matrix in(1, 6);
+	for(unsigned int i = 0; i < NBR_RAYS; i++)
+		in.set(0, i, m_rays[i].getLenght());
+	in.set(0, 5, sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y));
+
+	const Matrix out = m_neuralN.forward(in);
+
+	float max(0.f);
+	unsigned int index(0);
+	for(unsigned int i = 0; i < 4; i++)
+		if(max < out.get(0, i))
+		{
+			max = out.get(0, i);
+			index = i;
+		}
+
+	switch(index)
+	{
+		case 0:
+			accelerate(fps);
+			break;
+		case 1:
+			break;
+		case 2:
+			left(fps);
+			break;
+		case 3:
+			right(fps);
+			break;
+		default:
+			break;
+	}
+
+	//in.print();
+	//out.print();
+	//for(unsigned int i = 0; i < NBR_RAYS; i++)
+	//	printf("%f ", m_rays[i].getLenght());
+	//printf(">%f\n", sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y));
+}
+
 void Car::update(const float fps)
 {
 	if(!m_crashed)
 	{
 		//input(fps);
-		Matrix in(1, 6);
-		for(unsigned int i = 0; i < NBR_RAYS; i++)
-			in.set(0, i, m_rays[i].getLenght());
-		in.set(0, 5, sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y));
-
-
-		const Matrix out = m_neuralN.forward(in);
-
-		if(out.get(0, 0) > 0.5)
-			accelerate(fps);
-		if(out.get(0, 2) > 0.5)
-			left(fps);
-		if(out.get(0, 3) > 0.5)
-			right(fps);
-
-
-		//in.print();
-		//out.print();
-		//for(unsigned int i = 0; i < NBR_RAYS; i++)
-		//	printf("%f ", m_rays[i].getLenght());
-		//printf(">%f\n", sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y));
-
-
+		think(fps);
 		
 		truncate(m_vel, m_vel, MAX_SPEED);
 		normalized(m_rotation, m_vel);
@@ -161,11 +206,9 @@ void Car::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(m_sprite);
 
-	if(m_showLine)
-	{
+	if(!m_crashed && m_showLine)
 		for(short i = 0; i < NBR_RAYS; i++)
 			target.draw(m_rays[i]);
-	}
 }
 
 
@@ -182,10 +225,10 @@ void Car::decelerate(const float fps)
 
 void Car::left(const float fps)
 {
-	rotate(m_vel, m_vel, -TURN * fps);
+	rotate(m_vel, m_vel, -TURN * fps * map(sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y), 0, MAX_SPEED, 0, 1));
 }
 
 void Car::right(const float fps)
 {
-	rotate(m_vel, m_vel, TURN * fps);
+	rotate(m_vel, m_vel, TURN * fps * map(sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y), 0, MAX_SPEED, 0, 1));
 }

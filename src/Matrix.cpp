@@ -54,18 +54,17 @@ void Matrix::set(const int i, const int j, const float val)
 
 /*-----------------------------------------------------------------------------------------*/
 
-void Matrix::initValues(const float val)
-{
-	for(int i = 0; i < m_size.x * m_size.y; i++)
-		m_tabl[i] = val;
-}
-
 void Matrix::initRandom()
 {
-	//int RAND_MAX = 6;
 	for(int i = 0; i < m_size.x * m_size.y; i++)
-		m_tabl[i] = ((float) rand()) / (float) RAND_MAX;
-	//random = ((float) rand()) / (float) RAND_MAX;
+		m_tabl[i] = -1 + (float)rand() / (float)(RAND_MAX / 2);
+}
+
+void Matrix::mutate()
+{
+	for(int i = 0; i < m_size.x * m_size.y; i++)
+		if((float)rand() / (float)RAND_MAX < 0.05)
+			m_tabl[i] = -1 + (float)rand() / (float)(RAND_MAX / 2);
 }
 
 void Matrix::print() const

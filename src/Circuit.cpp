@@ -51,7 +51,7 @@ inline void Circuit::loadFromFile(const char* path)
 	std::ifstream file;
 	file.open(path);
 	if(!file)
-		throw new std::ios_base::failure("Open .map has failed");
+		throw std::runtime_error("Failed to load .map");
 
 
 	float x1, y1, x2, y2;
