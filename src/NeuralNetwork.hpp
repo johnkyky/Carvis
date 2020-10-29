@@ -6,6 +6,9 @@
 #include "Matrix.hpp"
 
 
+#define MATATION_RATE 0.1
+
+
 class NeuralNetwork
 {
 public:

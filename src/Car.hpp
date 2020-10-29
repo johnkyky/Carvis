@@ -14,7 +14,7 @@
 
 
 #define MAX_SPEED 600.f
-#define ACCELERATION 300.f
+#define ACCELERATION 200.f
 #define DECELERATION 2.f
 #define	TURN 500.f
 #define NBR_RAYS 5
@@ -40,6 +40,15 @@ public:
 	sf::FloatRect getBox()
 	{
 		return m_sprite.getGlobalBounds();
+	}
+
+	void select()
+	{
+		m_sprite.setScale(1.5, 1.5);
+	}
+	void unselect()
+	{
+		m_sprite.setScale(1, 1);
 	}
 
 	void showRay();

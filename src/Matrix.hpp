@@ -20,7 +20,7 @@ public:
 
 	void print() const;
 	
-	void mutate();
+	void mutate(const float rate);
 
 	friend void dot(Matrix& res, const Matrix& m1, const Matrix& m2);
 	friend Matrix dot(const Matrix& m1, const Matrix& m2);

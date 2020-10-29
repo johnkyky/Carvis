@@ -73,7 +73,7 @@ const Matrix NeuralNetwork::forward(const Matrix& mat)
 void NeuralNetwork::mutate()
 {
 	for(auto& i : m_matrix)
-		i.mutate();
+		i.mutate(MATATION_RATE);
 }
 
 

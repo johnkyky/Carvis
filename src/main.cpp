@@ -9,8 +9,8 @@
 #include "NeuralNetwork.hpp"
 
 
-#define FPS 121.f
-#define NBR_CAR 1000
+#define FPS 61.f
+#define NBR_CAR 500
 
 
 void neuro()
@@ -31,12 +31,20 @@ void mainThread()
     sf::RenderWindow window(sf::VideoMode().getDesktopMode(), "Carvis");
     window.setFramerateLimit(FPS);
 
+    // environnement var
+    bool pause(false);
+    unsigned int generation(0);
+
     // Load font and fps label
     sf::Font font;
     if(!font.loadFromFile("./ressources/font.ttf"))
         throw std::runtime_error("Failed to load font");
-    sf::Text fpsLabel("", font);
+    sf::Text fpsLabel(std::to_string(FPS), font);
     fpsLabel.setFillColor(sf::Color::Black);
+
+    sf::Text controlLabel("A : Show Ray | S : Solo run of selected car | LeftClic : Select/Unselect car | RightClic : Start a new generation", font);
+    controlLabel.setFillColor(sf::Color::Black);
+    controlLabel.setPosition(0.f, 975.f);
 
     // Load Texture de la voiture
     sf::Texture carTexture;
@@ -63,16 +71,29 @@ void mainThread()
             if(event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 window.close();
 
-            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
                 for(Car& i : cars)
                     i.showRay();
+
+            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S)
+            {
+                std::vector<Car> carsBuffer;
+                carsBuffer.push_back(Car(*bestCar));
+                cars.clear();
+                cars = carsBuffer;
+                bestCar = nullptr;
+            }
+
+            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+                pause = !pause;
 
             if(event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Right))
                 if(bestCar)
                 {
-                    printf("on mute tt le monde\n");
+                    generation++;
                     std::vector<Car> carsBuffer;
-                    for(unsigned int i = 0; i < NBR_CAR; i++)
+                    carsBuffer.push_back(Car(*bestCar));
+                    for(unsigned int i = 0; i < NBR_CAR - 1; i++)
                     {
                         Car carBuffer(*bestCar);
                         carBuffer.mutate();
@@ -80,21 +101,37 @@ void mainThread()
                     }
                     cars.clear();
                     cars = carsBuffer;
+                    bestCar = &cars[0];
+                    cars[0].select();
                 }
 
             if(event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
                 for(Car& i : cars)
                 {
                     if(i.getBox().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                     {
-                        bestCar = &i;
-                        break;
+                        if(bestCar == &i)
+                        {
+                            bestCar->unselect();
+                            bestCar = nullptr;                            
+                        }
+                        else
+                        {
+                            if(bestCar)
+                                bestCar->unselect();
+                            bestCar = &i;
+                            bestCar->select();
+                            break;
+                        }
                     }
                 }
+            }
         }
 
-        for(Car& i : cars)
-            i.update(dt.asSeconds());
+        if(!pause)
+            for(Car& i : cars)
+                i.update(dt.asSeconds());
 
         window.clear(sf::Color(163, 146, 111));
         
@@ -103,6 +140,7 @@ void mainThread()
             window.draw(i);
 
         window.draw(fpsLabel);
+        window.draw(controlLabel);
 
         window.display();
     }
@@ -113,7 +151,7 @@ void foo()
     Matrix m(10, 10);
     m.print();
     printf("\n");
-    m.mutate();
+    m.mutate(0.1);
     m.print();
 }
 

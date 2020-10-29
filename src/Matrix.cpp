@@ -60,10 +60,10 @@ void Matrix::initRandom()
 		m_tabl[i] = -1 + (float)rand() / (float)(RAND_MAX / 2);
 }
 
-void Matrix::mutate()
+void Matrix::mutate(const float rate)
 {
 	for(int i = 0; i < m_size.x * m_size.y; i++)
-		if((float)rand() / (float)RAND_MAX < 0.05)
+		if((float)rand() / (float)RAND_MAX < rate)
 			m_tabl[i] = -1 + (float)rand() / (float)(RAND_MAX / 2);
 }
 
