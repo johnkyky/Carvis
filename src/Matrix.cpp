@@ -47,7 +47,7 @@ const float& Matrix::get(const int i, const int j) const
 void Matrix::set(const int i, const int j, const float val)
 {
 	if(i >= m_size.y || j >= m_size.x || i < 0 || j < 0)
-		throw std::out_of_range("mmatrix index out of range");
+		throw std::out_of_range("matrix index out of range");
 
 	m_tabl[m_size.y * j + i] = val;
 }
@@ -62,9 +62,21 @@ void Matrix::initRandom()
 
 void Matrix::mutate(const float rate)
 {
+	std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::normal_distribution<> d{0, 1};
+
 	for(int i = 0; i < m_size.x * m_size.y; i++)
 		if((float)rand() / (float)RAND_MAX < rate)
-			m_tabl[i] = -1 + (float)rand() / (float)(RAND_MAX / 2);
+		{
+			m_tabl[i] += d(gen) * 0.5;
+
+			if(m_tabl[i] < -1)
+				m_tabl[i] = -1;
+			else if(m_tabl[i] > 1)
+				m_tabl[i] = 1;
+			//m_tabl[i] = -1 + (float)rand() / (float)(RAND_MAX / 2);
+		}
 }
 
 void Matrix::print() const

@@ -204,7 +204,8 @@ void Car::update(const float fps)
 
 void Car::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(m_sprite);
+	if(!m_crashed)
+		target.draw(m_sprite);
 
 	if(!m_crashed && m_showLine)
 		for(short i = 0; i < NBR_RAYS; i++)
