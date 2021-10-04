@@ -119,10 +119,6 @@ inline void Car::input(const float fps)
 	const bool q = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
 	const bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 
-	//const bool z = rand() % 2;
-	//const bool q = rand() % 2;
-	//const bool d = rand() % 2;
-
 	if(z)
 		accelerate(fps);
 	else

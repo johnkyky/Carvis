@@ -43,30 +43,18 @@ NeuralNetwork& NeuralNetwork::operator=(const NeuralNetwork& n)
 
 const Matrix NeuralNetwork::forward(const Matrix& mat)
 {
-		//mat.print(); printf("\n");
-		//m_matrix[0].print(); printf("\n");
-
 	Matrix hidden = Matrix::dot(mat, m_matrix[0]);
 	ReLu(hidden);
-
-		//hidden.print(); printf("\n");
 
 	for (unsigned int i = 1; i < m_hiddenNumberLayer; ++i)
 	{
 		Matrix::dot(hidden, hidden, m_matrix[i]);
 		ReLu(hidden);
-
-			//m_matrix[i].print(); printf("\n");
-			//hidden.print(); printf("\n");
 	}
 
-		//m_matrix.back().print(); printf("\n");
-	
 	Matrix out = Matrix::dot(hidden, m_matrix.back());
 	ReLu(out);
 		
-		//out.print();
-
 	return out;
 }
 
@@ -94,9 +82,16 @@ void NeuralNetwork::sigmoid(Matrix& x)
 			x.set(i, j, 1 / (1 + exp(-x.get(i, j))));
 }
 
-void NeuralNetwork::ReLu(Matrix& x)
+void NeuralNetwork::ReLu(Matrix& mat)
 {
+	/*
 	for(int i = 0; i < x.getSize().y; i++)
 		for(int j = 0; j < x.getSize().x; j++)
 			x.set(i, j, std::max(0.f, x.get(i, j)));
+	*/
+
+	int s(mat.m * mat.n);
+	float* tabl(mat.data());
+	for(int i = 0; i < s; i++)
+		tabl[i] = std::max(0.f, tabl[i]);
 }
