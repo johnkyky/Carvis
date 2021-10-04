@@ -46,14 +46,14 @@ const Matrix NeuralNetwork::forward(const Matrix& mat)
 		//mat.print(); printf("\n");
 		//m_matrix[0].print(); printf("\n");
 
-	Matrix hidden = dot(mat, m_matrix[0]);
+	Matrix hidden = Matrix::dot(mat, m_matrix[0]);
 	ReLu(hidden);
 
 		//hidden.print(); printf("\n");
 
 	for (unsigned int i = 1; i < m_hiddenNumberLayer; ++i)
 	{
-		dot(hidden, hidden, m_matrix[i]);
+		Matrix::dot(hidden, hidden, m_matrix[i]);
 		ReLu(hidden);
 
 			//m_matrix[i].print(); printf("\n");
@@ -62,7 +62,7 @@ const Matrix NeuralNetwork::forward(const Matrix& mat)
 
 		//m_matrix.back().print(); printf("\n");
 	
-	Matrix out = dot(hidden, m_matrix.back());
+	Matrix out = Matrix::dot(hidden, m_matrix.back());
 	ReLu(out);
 		
 		//out.print();

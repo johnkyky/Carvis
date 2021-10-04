@@ -2,7 +2,7 @@
 
 
 Matrix::Matrix(const unsigned int size_i, const unsigned int size_j)
-	: m_size(size_j, size_i)
+	: m(size_i), n(size_j), m_size(size_j, size_i)
 {
 	m_tabl = new float[m_size.x * m_size.y];
 
@@ -11,7 +11,7 @@ Matrix::Matrix(const unsigned int size_i, const unsigned int size_j)
 }
 
 Matrix::Matrix(const Matrix& m)
-	: m_size(m.m_size)
+	: m(m.m), n(m.n), m_size(m.m_size)
 {
 	m_tabl = new float[m_size.x * m_size.y];
 	for(int i = 0; i < m_size.x * m_size.y; i++)
@@ -50,6 +50,11 @@ void Matrix::set(const int i, const int j, const float val)
 		throw std::out_of_range("matrix index out of range");
 
 	m_tabl[m_size.y * j + i] = val;
+}
+
+float* Matrix::data() const
+{
+	return m_tabl;
 }
 
 /*-----------------------------------------------------------------------------------------*/
@@ -94,7 +99,7 @@ void Matrix::print() const
 
 /*-----------------------------------------------------------------------------------------*/
 
-void dot(Matrix& res, const Matrix& m1, const Matrix& m2)
+void Matrix::dot(Matrix& res, const Matrix& m1, const Matrix& m2)
 {
 	if(m1.m_size.x != m2.m_size.y)
 		throw std::out_of_range("matrix dot incompatible size");
@@ -118,7 +123,7 @@ void dot(Matrix& res, const Matrix& m1, const Matrix& m2)
 	}
 }
 
-Matrix dot(const Matrix& m1, const Matrix& m2)
+Matrix Matrix::dot(const Matrix& m1, const Matrix& m2)
 {
 	Matrix res(m1.m_size.y, m2.m_size.x);
 	dot(res, m1, m2);
