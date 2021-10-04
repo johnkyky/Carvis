@@ -75,21 +75,16 @@ void NeuralNetwork::print()
 }
 
 
-void NeuralNetwork::sigmoid(Matrix& x)
+void NeuralNetwork::sigmoid(Matrix& mat)
 {
-	for(int i = 0; i < x.getSize().y; i++)
-		for(int j = 0; j < x.getSize().x; j++)
-			x.set(i, j, 1 / (1 + exp(-x.get(i, j))));
+	int s(mat.m * mat.n);
+	float* tabl(mat.data());
+	for(int i = 0; i < s; i++)
+		tabl[i] = 1 / (1 + exp(-tabl[i]));
 }
 
 void NeuralNetwork::ReLu(Matrix& mat)
 {
-	/*
-	for(int i = 0; i < x.getSize().y; i++)
-		for(int j = 0; j < x.getSize().x; j++)
-			x.set(i, j, std::max(0.f, x.get(i, j)));
-	*/
-
 	int s(mat.m * mat.n);
 	float* tabl(mat.data());
 	for(int i = 0; i < s; i++)

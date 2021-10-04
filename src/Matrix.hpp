@@ -7,15 +7,11 @@
 class Matrix
 {
 public:
-	Matrix(const unsigned int size_i, const unsigned int size_j);
+	Matrix(const unsigned int size_m, const unsigned int size_n);
 	Matrix(const Matrix& m);
 	~Matrix();
 
 	Matrix& operator=(const Matrix& m);
-
-	const sf::Vector2i& getSize() const;
-	const float& get(const int i, const int j) const;
-	void set(const int i, const int j, const float val);
 
 	float* data() const;
 
@@ -31,6 +27,5 @@ public:
 	const int m, n;
 	
 private:
-	const sf::Vector2i m_size;
 	float* m_tabl;
 };

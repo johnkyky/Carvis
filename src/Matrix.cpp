@@ -1,8 +1,8 @@
 #include "Matrix.hpp"
 
 
-Matrix::Matrix(const unsigned int size_i, const unsigned int size_j)
-	: m(size_i), n(size_j), m_size(size_j, size_i)
+Matrix::Matrix(const unsigned int size_m, const unsigned int size_n)
+	: m(size_m), n(size_n)//, m_size(size_j, size_i)
 {
 	m_tabl = new float[m * n];
 
@@ -11,7 +11,7 @@ Matrix::Matrix(const unsigned int size_i, const unsigned int size_j)
 }
 
 Matrix::Matrix(const Matrix& mat)
-	: m(mat.m), n(mat.n), m_size(mat.m_size)
+	: m(mat.m), n(mat.n)//, m_size(mat.m_size)
 {
 	m_tabl = new float[m * n];
 	for(int i = 0; i < m * n; i++)
@@ -31,27 +31,14 @@ Matrix& Matrix::operator=(const Matrix& m)
 
 /*-----------------------------------------------------------------------------------------*/
 
-const sf::Vector2i& Matrix::getSize() const
+/* void Matrix::set(const int i, const int j, const float val)
 {
-	return m_size;
-}
-
-const float& Matrix::get(const int i, const int j) const
-{
-	if(i >= m_size.y || j >= m_size.x || i < 0 || j < 0)
+	if(i >= m || j >= n || i < 0 || j < 0)
 		throw std::out_of_range("matrix index out of range");
 
-	return m_tabl[m_size.y * j + i];
+	m_tabl[i * n + j] = val;
 }
-
-void Matrix::set(const int i, const int j, const float val)
-{
-	if(i >= m_size.y || j >= m_size.x || i < 0 || j < 0)
-		throw std::out_of_range("matrix index out of range");
-
-	m_tabl[m_size.y * j + i] = val;
-}
-
+ */
 float* Matrix::data() const
 {
 	return m_tabl;
@@ -80,7 +67,6 @@ void Matrix::mutate(const float rate)
 				m_tabl[i] = -1;
 			else if(m_tabl[i] > 1)
 				m_tabl[i] = 1;
-			//m_tabl[i] = -1 + (float)rand() / (float)(RAND_MAX / 2);
 		}
 }
 

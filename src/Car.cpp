@@ -132,19 +132,25 @@ inline void Car::input(const float fps)
 
 inline void Car::think(const float fps)
 {
-	Matrix in(1, 6);
-	for(unsigned int i = 0; i < NBR_RAYS; i++)
-		in.set(0, i, m_rays[i].getLenght());
-	in.set(0, 5, sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y));
+	Matrix input(1, 6);
+	float* input_tab(input.data());
 
-	const Matrix out = m_neuralN.forward(in);
+	input_tab[0] = m_rays[0].getLenght();
+	input_tab[1] = m_rays[1].getLenght();
+	input_tab[2] = m_rays[2].getLenght();
+	input_tab[3] = m_rays[3].getLenght();
+	input_tab[4] = m_rays[4].getLenght();
+	input_tab[5] = sqrt(m_vel.x * m_vel.x + m_vel.y * m_vel.y);
+
+	const Matrix output = m_neuralN.forward(input);
+	float* output_tab(output.data());
 
 	float max(0.f);
 	unsigned int index(0);
 	for(unsigned int i = 0; i < 4; i++)
-		if(max < out.get(0, i))
+		if(max < output_tab[i])
 		{
-			max = out.get(0, i);
+			max = output_tab[i];
 			index = i;
 		}
 

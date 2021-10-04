@@ -13,19 +13,6 @@
 #define NBR_CAR 500
 
 
-void neuro()
-{
-    NeuralNetwork n(6, 3, 10, 2);
-    Matrix input(1, 6);
-    input.set(0, 0, 30);
-    input.set(0, 1, -3.5);
-    input.set(0, 2, 12);
-    input.set(0, 3, 2.4);
-    input.set(0, 4, 10.6);
-    input.set(0, 5, 4.9);
-    n.forward(input);
-}
-
 void mainThread()
 {
     sf::RenderWindow window(sf::VideoMode().getDesktopMode(), "Carvis");
@@ -177,7 +164,6 @@ int main()
 {
     srand(time(0));
     
-    //neuro();
     mainThread();
     foo();
 
