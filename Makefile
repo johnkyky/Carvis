@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -g
-SFFLAGS = -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
+SFFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 EXE = Carvis
 
 SRCDIR = src/
@@ -12,7 +12,7 @@ OBJ = $(OBJDIR)main.o $(OBJDIR)Car.o $(OBJDIR)Circuit.o $(OBJDIR)Ray.o $(OBJDIR)
 
 
 all: $(OBJ)
-	$(CC) -o $(BINDIR)$(EXE) $(CFLAGS) $(SFFLAGS) $^
+	$(CC) -o $(BINDIR)$(EXE) $(CFLAGS) $^ $(SFFLAGS)
 	./bin/$(EXE)
 
 
