@@ -3,7 +3,7 @@
 
 Car::Car(const Circuit& circuit, const sf::Texture& texture)
 	: m_circuit(circuit), m_vel(0.f, 0.f), m_texture(texture), m_sprite(texture),
-	  m_showLine(false), m_crashed(false), m_neuralN(6, 4, 10, 2) // z s q d
+	  m_showLine(false), m_crashed(false), m_neuralN(6, 4, 10, 1) // z s q d
 {
 	m_position = m_circuit.getSpawnPoint();
 	m_rotation = m_circuit.getSpawnAngle();
@@ -168,12 +168,6 @@ inline void Car::think(const float fps)
 		default:
 			break;
 	}
-
-	//in.print();
-	//out.print();
-	//for(unsigned int i = 0; i < NBR_RAYS; i++)
-	//	printf("%f ", m_rays[i].getLenght());
-	//printf(">%f\n", sqrt(m_vel.x*m_vel.x + m_vel.y*m_vel.y));
 }
 
 void Car::update(const float fps)

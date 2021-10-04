@@ -148,11 +148,29 @@ void mainThread()
 
 void foo()
 {
-    Matrix m(10, 10);
-    m.print();
-    printf("\n");
-    m.mutate(0.1);
-    m.print();
+   Matrix A(3, 2), B(2, 2), C(3, 2);
+
+    float* A_tabl(A.data());
+    float* B_tabl(B.data());
+
+    A_tabl[0] = 1;
+    A_tabl[1] = 2;
+    A_tabl[2] = 3;
+    A_tabl[3] = 4;
+    A_tabl[4] = 5;
+    A_tabl[5] = 40;
+
+    B_tabl[0] = 4;
+    B_tabl[1] = 3;
+    B_tabl[2] = 2;
+    B_tabl[3] = 1;
+
+    Matrix::dot(C, A, B);
+    A.print();
+    printf("\n\n");
+    B.print();
+    printf("\n\n");
+    C.print();
 }
 
 int main()
@@ -161,7 +179,7 @@ int main()
     
     //neuro();
     mainThread();
-    //foo();
+    foo();
 
     return 0;
 }
