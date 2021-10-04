@@ -146,22 +146,12 @@ void mainThread()
     }
 }
 
-void foo()
-{
-    Matrix m(10, 10);
-    m.print();
-    printf("\n");
-    m.mutate(0.1);
-    m.print();
-}
-
 int main()
 {
     srand(time(0));
     
     //neuro();
     mainThread();
-    //foo();
 
     return 0;
 }
