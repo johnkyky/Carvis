@@ -78,7 +78,7 @@ void NeuralNetwork::print()
 void NeuralNetwork::sigmoid(Matrix& mat)
 {
 	int s(mat.m * mat.n);
-	float* tabl(mat.data());
+	float* tabl(mat.array());
 	for(int i = 0; i < s; i++)
 		tabl[i] = 1 / (1 + exp(-tabl[i]));
 }
@@ -86,7 +86,7 @@ void NeuralNetwork::sigmoid(Matrix& mat)
 void NeuralNetwork::ReLu(Matrix& mat)
 {
 	int s(mat.m * mat.n);
-	float* tabl(mat.data());
+	float* tabl(mat.array());
 	for(int i = 0; i < s; i++)
 		tabl[i] = std::max(0.f, tabl[i]);
 }

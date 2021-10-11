@@ -137,8 +137,8 @@ void foo()
 {
    Matrix A(3, 2), B(2, 2), C(3, 2);
 
-    float* A_tabl(A.data());
-    float* B_tabl(B.data());
+    float* A_tabl(A.array());
+    float* B_tabl(B.array());
 
     A_tabl[0] = 1;
     A_tabl[1] = 2;
@@ -165,7 +165,7 @@ int main()
     srand(time(0));
     
     mainThread();
-    foo();
+    //foo();
 
     return 0;
 }

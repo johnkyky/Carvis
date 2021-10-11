@@ -2,7 +2,7 @@
 
 
 Matrix::Matrix(const unsigned int size_m, const unsigned int size_n)
-	: m(size_m), n(size_n)//, m_size(size_j, size_i)
+	: m(size_m), n(size_n)
 {
 	m_tabl = new float[m * n];
 
@@ -11,7 +11,7 @@ Matrix::Matrix(const unsigned int size_m, const unsigned int size_n)
 }
 
 Matrix::Matrix(const Matrix& mat)
-	: m(mat.m), n(mat.n)//, m_size(mat.m_size)
+	: m(mat.m), n(mat.n)
 {
 	m_tabl = new float[m * n];
 	for(int i = 0; i < m * n; i++)
@@ -31,15 +31,7 @@ Matrix& Matrix::operator=(const Matrix& m)
 
 /*-----------------------------------------------------------------------------------------*/
 
-/* void Matrix::set(const int i, const int j, const float val)
-{
-	if(i >= m || j >= n || i < 0 || j < 0)
-		throw std::out_of_range("matrix index out of range");
-
-	m_tabl[i * n + j] = val;
-}
- */
-float* Matrix::data() const
+float* Matrix::array() const
 {
 	return m_tabl;
 }

@@ -3,7 +3,7 @@
 
 Car::Car(const Circuit& circuit, const sf::Texture& texture)
 	: m_circuit(circuit), m_vel(0.f, 0.f), m_texture(texture), m_sprite(texture),
-	  m_showLine(false), m_crashed(false), m_neuralN(6, 4, 10, 1) // z s q d
+	  m_showLine(false), m_crashed(false), m_neuralN(6, 4, 10, 1)
 {
 	m_position = m_circuit.getSpawnPoint();
 	m_rotation = m_circuit.getSpawnAngle();
@@ -133,7 +133,7 @@ inline void Car::input(const float fps)
 inline void Car::think(const float fps)
 {
 	Matrix input(1, 6);
-	float* input_tab(input.data());
+	float* input_tab(input.array());
 
 	input_tab[0] = m_rays[0].getLenght();
 	input_tab[1] = m_rays[1].getLenght();
@@ -143,7 +143,7 @@ inline void Car::think(const float fps)
 	input_tab[5] = sqrt(m_vel.x * m_vel.x + m_vel.y * m_vel.y);
 
 	const Matrix output = m_neuralN.forward(input);
-	float* output_tab(output.data());
+	float* output_tab(output.array());
 
 	float max(0.f);
 	unsigned int index(0);

@@ -13,7 +13,7 @@ public:
 
 	Matrix& operator=(const Matrix& m);
 
-	float* data() const;
+	float* array() const;
 
 	void initRandom();
 
