@@ -88,13 +88,13 @@ void Matrix::dot(Matrix& res, const Matrix& m1, const Matrix& m2)
 	for(int i = 0; i < res.m * res.n; i++)
 		res.m_tabl[i] = 0.0;
 	
-	for(int i = 0; i < m1.m; ++i)
+	for(int i = 0; i < m1.m; i++)
 	{
-		for (int k = 0; k < m1.n; ++k)
+		for(int j = 0; j < m2.n; j++)
 		{
-			for(int j = 0; j < m2.n; ++j)
+			for (int k = 0; k < m1.n; k++)
 			{
-				res.m_tabl[i * res.n + j] += m1.m_tabl[i * res.n + k] * m2.m_tabl[k * res.n + j];
+				res.m_tabl[i * m2.n + j] += m1.m_tabl[i * m1.n + k] * m2.m_tabl[k * m2.n + j];
 			}
 		}
 	}

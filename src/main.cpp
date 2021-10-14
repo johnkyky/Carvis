@@ -133,26 +133,105 @@ void mainThread()
     }
 }
 
-void foo()
+void test_mult1()
 {
-   Matrix A(3, 2), B(2, 2), C(3, 2);
+   Matrix A(3, 4), B(4, 1);
 
     float* A_tabl(A.array());
     float* B_tabl(B.array());
 
-    A_tabl[0] = 1;
-    A_tabl[1] = 2;
-    A_tabl[2] = 3;
-    A_tabl[3] = 4;
-    A_tabl[4] = 5;
-    A_tabl[5] = 40;
+    //
+    A_tabl[0] = 2;
+    A_tabl[1] = 0;
+    A_tabl[2] = 2;
+    A_tabl[3] = 0;
 
+    A_tabl[4] = 2;
+    A_tabl[5] = 1;
+    A_tabl[6] = 4;
+    A_tabl[7] = 5;
+
+    A_tabl[8] = 20;
+    A_tabl[9] = 7;
+    A_tabl[10] = 8;
+    A_tabl[11] = 14;
+
+    //
     B_tabl[0] = 4;
     B_tabl[1] = 3;
     B_tabl[2] = 2;
     B_tabl[3] = 1;
 
-    Matrix::dot(C, A, B);
+    //
+    auto C(Matrix::dot(A, B));
+    printf("\n");
+    A.print();
+    printf("\n\n");
+    B.print();
+    printf("\n\n");
+    C.print();
+}
+
+void test_mult2()
+{
+   Matrix A(3, 2), B(2, 4);
+
+    float* A_tabl(A.array());
+    float* B_tabl(B.array());
+
+    //
+    A_tabl[0] = 8;
+    A_tabl[1] = 1;
+
+    A_tabl[2] = 3;
+    A_tabl[3] = 1;
+
+    A_tabl[4] = 9;
+    A_tabl[5] = 0;
+
+    //
+    B_tabl[0] = 7;
+    B_tabl[1] = 6;
+    B_tabl[2] = 3;
+    B_tabl[3] = 2;
+
+    B_tabl[4] = 9;
+    B_tabl[5] = 0;
+    B_tabl[6] = 1;
+    B_tabl[7] = 7;
+
+    //
+    auto C(Matrix::dot(A, B));
+    printf("\n");
+    A.print();
+    printf("\n\n");
+    B.print();
+    printf("\n\n");
+    C.print();
+}
+
+void test_mult3()
+{
+   Matrix A(1, 4), B(4, 1);
+
+    float* A_tabl(A.array());
+    float* B_tabl(B.array());
+
+    //
+    A_tabl[0] = 4;
+    A_tabl[1] = 2;
+    A_tabl[2] = 7;
+    A_tabl[3] = 3;
+
+    //
+    B_tabl[0] = 2;
+    B_tabl[1] = 1;
+    B_tabl[2] = 0;
+    B_tabl[3] = 9;
+
+    //
+    auto C(Matrix::dot(A, B));
+    printf("\n");
     A.print();
     printf("\n\n");
     B.print();
@@ -165,7 +244,10 @@ int main()
     srand(time(0));
     
     mainThread();
-    //foo();
+    
+    //test_mult1();
+    //test_mult2();
+    //test_mult3();
 
     return 0;
 }
